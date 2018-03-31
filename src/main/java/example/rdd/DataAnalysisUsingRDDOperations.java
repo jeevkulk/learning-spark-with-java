@@ -31,7 +31,8 @@ public class DataAnalysisUsingRDDOperations {
         sw.stop();
         logger.info("===========> Total time taken to load RDDs: " + sw.getTime(TimeUnit.SECONDS) + " seconds");
         filterFor(allColumnsRdd,"BurgerKing-Anchorage,AK");
-        //countByGroup(allColumnsRdd);
+        countByKey(allColumnsRdd);
+        countByAfterGrouping(allColumnsRdd);
         regionWiseCount(allColumnsRdd);
     }
 
@@ -52,7 +53,7 @@ public class DataAnalysisUsingRDDOperations {
         logger.info("===========> Total count of lines filtered: " + rdd.count() + " in time " + sw.getTime(TimeUnit.MICROSECONDS) + " msecs");
     }
 
-    private void countByGroup(JavaRDD<String> rdd) {
+    private void countByAfterGrouping(JavaRDD<String> rdd) {
         StopWatch sw = new StopWatch();
         sw.start();
 
@@ -68,7 +69,18 @@ public class DataAnalysisUsingRDDOperations {
         list.forEach(tuple -> {
             logger.info(tuple._1 + " : " + tuple._2);
         });
+        sw.stop();
+        logger.info("===========> Time taken: " + sw.getTime(TimeUnit.MICROSECONDS) + " msecs");
+    }
 
+    private void countByKey(JavaRDD<String> rdd) {
+        StopWatch sw = new StopWatch();
+        sw.start();
+
+        JavaPairRDD<String, Integer> pairRDD = rdd.mapToPair(data -> {
+            String[] dataArr = data.split(",");
+            return new Tuple2(dataArr[2], 1);
+        });
         Map<String, Long> map = pairRDD.countByKey();
         map.forEach((k, v) -> logger.info(k+" --- "+v));
         sw.stop();
@@ -81,10 +93,7 @@ public class DataAnalysisUsingRDDOperations {
         JavaRDD<String> regionalCentresRDD = rdd.map(data -> data.split(",")[2]);
         JavaPairRDD<String, Integer> pairRDD = regionalCentresRDD.mapToPair(data -> new Tuple2(data, 1));
         JavaPairRDD<String, Integer> pairRDDCounts = pairRDD.reduceByKey((a, b) -> a + b);
-        logger.info(pairRDDCounts.toDebugString());
-        /*for (Tuple2<String, Integer> t : filteredList) {
-            logger.info(t._1 + " ~ " + t._2);
-        }*/
+        logger.info(pairRDDCounts.collect());
         sw.stop();
         logger.info("===========> Time taken: " + sw.getTime(TimeUnit.MICROSECONDS) + " msecs");
     }
