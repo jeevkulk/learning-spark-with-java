@@ -1,4 +1,4 @@
-package example.sparkrdd;
+package sparkrdd;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
