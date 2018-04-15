@@ -1,4 +1,4 @@
-package example.sparkrdd;
+package sparkrdd;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.LogManager;
@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class DataAnalysisUsingRDDOperations {
+public class DataAnalysisUsingRDD {
 
-    Logger logger = LogManager.getLogger(DataAnalysisUsingRDDOperations.class);
+    Logger logger = LogManager.getLogger(DataAnalysisUsingRDD.class);
 
     public static void main(String[] args) {
-        DataAnalysisUsingRDDOperations dataAnalysisUsingRDDOperations = new DataAnalysisUsingRDDOperations();
-        dataAnalysisUsingRDDOperations.analyseData();
+        DataAnalysisUsingRDD dataAnalysisUsingRDD = new DataAnalysisUsingRDD();
+        dataAnalysisUsingRDD.analyseData();
     }
 
     public void analyseData() {
