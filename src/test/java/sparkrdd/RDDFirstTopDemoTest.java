@@ -12,11 +12,11 @@ import java.util.List;
 @RunWith(MockitoJUnitRunner.class)
 public class RDDFirstTopDemoTest {
 
-    private RDDFirstTopDemo rddFirstTopDemo;
+    private RDDFirstTopDemo rddFirstTopDemo = null;
 
     @Before
     public void setup() {
-        rddFirstTopDemo = new RDDFirstTopDemo();
+        rddFirstTopDemo = RDDFirstTopDemo.INSTANCE;
     }
 
     @Test
