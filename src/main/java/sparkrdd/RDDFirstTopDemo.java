@@ -10,16 +10,17 @@ import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
 
-public class RDDFirstTopDemo {
+public enum RDDFirstTopDemo {
+
+    INSTANCE;
 
     private Logger logger = LogManager.getLogger(RDDFirstTopDemo.class);
 
-    static Object lock = new Object();
-    static JavaSparkContext context = null;
+    private JavaSparkContext context = null;
 
     private JavaSparkContext getJavaSparkContext() {
         if (context == null) {
-            synchronized (lock) {
+            synchronized (this) {
                 if (context == null) {
                     SparkConf conf = new SparkConf().setMaster("local").setAppName("RDDFirstTopDemo");
                     context = new JavaSparkContext(conf);
