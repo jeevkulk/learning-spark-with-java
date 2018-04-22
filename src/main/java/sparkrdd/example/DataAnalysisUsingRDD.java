@@ -1,4 +1,4 @@
-package sparkrdd;
+package sparkrdd.example;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.LogManager;

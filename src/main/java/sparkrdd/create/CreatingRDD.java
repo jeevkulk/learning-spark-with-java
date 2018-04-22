@@ -1,4 +1,4 @@
-package sparkrdd;
+package sparkrdd.create;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -6,7 +6,6 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
