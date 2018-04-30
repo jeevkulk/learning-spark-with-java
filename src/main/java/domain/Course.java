@@ -1,6 +1,7 @@
 package domain;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Course implements Serializable {
 
@@ -66,5 +67,18 @@ public class Course implements Serializable {
 
     public void setCredits(int credits) {
         this.credits = credits;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Course)) return false;
+        Course course = (Course) o;
+        return Objects.equals(getCode(), course.getCode());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getCode());
     }
 }
