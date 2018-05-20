@@ -1,14 +1,12 @@
-package sparkrdd.transformation;
+package sparkcore.transformation;
 
-import domain.Course;
+import common.domain.Course;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public enum WideTransformations {
@@ -42,5 +40,16 @@ public enum WideTransformations {
         JavaRDD<Course> rdd1 = context.parallelize(list1);
         JavaRDD<Course> rdd2 = context.parallelize(list2);
         return rdd1.intersection(rdd2);
+    }
+
+    /**
+     * Gets distinct elements from the RDD
+     * @param list
+     * @return
+     */
+    public JavaRDD<Course> getDistinct(List<Course> list) {
+        JavaSparkContext context = getJavaSparkContext();
+        JavaRDD<Course> rdd = context.parallelize(list);
+        return rdd.distinct();
     }
 }

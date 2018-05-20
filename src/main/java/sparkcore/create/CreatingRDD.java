@@ -1,4 +1,4 @@
-package sparkrdd.create;
+package sparkcore.create;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;

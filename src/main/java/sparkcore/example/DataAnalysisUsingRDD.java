@@ -1,4 +1,4 @@
-package sparkrdd.example;
+package sparkcore.example;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.LogManager;
@@ -58,7 +58,7 @@ public class DataAnalysisUsingRDD {
         sw.start();
 
         JavaPairRDD<String, Integer> pairRDD = rdd.mapToPair(data -> {
-            String[] dataArr = data.split(",");
+            String[] dataArr = data.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
             return new Tuple2(dataArr[2], 1);
         });
         pairRDD = pairRDD.reduceByKey((data1, data2) -> data1 + data2);
@@ -78,7 +78,7 @@ public class DataAnalysisUsingRDD {
         sw.start();
 
         JavaPairRDD<String, Integer> pairRDD = rdd.mapToPair(data -> {
-            String[] dataArr = data.split(",");
+            String[] dataArr = data.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
             return new Tuple2(dataArr[2], 1);
         });
         Map<String, Long> map = pairRDD.countByKey();
@@ -90,7 +90,7 @@ public class DataAnalysisUsingRDD {
     private void regionWiseCount(JavaRDD<String> rdd) {
         StopWatch sw = new StopWatch();
         sw.start();
-        JavaRDD<String> regionalCentresRDD = rdd.map(data -> data.split(",")[2]);
+        JavaRDD<String> regionalCentresRDD = rdd.map(data -> data.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)")[2]);
         JavaPairRDD<String, Integer> pairRDD = regionalCentresRDD.mapToPair(data -> new Tuple2(data, 1));
         JavaPairRDD<String, Integer> pairRDDCounts = pairRDD.reduceByKey((a, b) -> a + b);
         logger.info(pairRDDCounts.collect());
