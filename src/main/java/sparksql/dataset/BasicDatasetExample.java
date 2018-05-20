@@ -1,4 +1,4 @@
-package sparksql.basic;
+package sparksql.dataset;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
@@ -11,46 +11,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BasicDataFrameExample {
+public class BasicDatasetExample {
 
     public static void main(String[] args) {
-        BasicDataFrameExample example = new BasicDataFrameExample();
-        example.createAndShowDatasetUsingRow();
-        example.createAndShowDatasetUsingDomainObject();
+        BasicDatasetExample example = new BasicDatasetExample();
+        example.createAndShowDataset();
     }
 
-    private void createAndShowDatasetUsingRow() {
-        SparkSession sparkSession = getSparkSession();
-        JavaRDD<String> stringRDD = sparkSession.sparkContext().textFile(getDataFile(), 1).toJavaRDD();
-        JavaRDD<Row> rowRDD = stringRDD.map(data -> {
-            String[] dataArr = data.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
-            return RowFactory.create(Double.parseDouble(dataArr[0]), Double.parseDouble(dataArr[1]), dataArr[2], dataArr[3]);
-        });
-
-        /** Further JavaRDD<Row> transformation can be done as below:
-         *
-        JavaRDD<Franchise> franchiseRDD = rowRDD.map(row -> {
-            return new Franchise(row.getDouble(0), row.getDouble(1), row.getString(2), row.getString(3));
-        });
-        */
-        List<StructField> fields = new ArrayList<>();
-        fields.add(DataTypes.createStructField("latitude", DataTypes.DoubleType, false));
-        fields.add(DataTypes.createStructField("longitude", DataTypes.DoubleType, false));
-        fields.add(DataTypes.createStructField("name", DataTypes.StringType, false));
-        fields.add(DataTypes.createStructField("address", DataTypes.StringType, false));
-        StructType schema = DataTypes.createStructType(fields);
-
-        Dataset<Row> bkDataFrame = sparkSession.createDataFrame(rowRDD, schema);
-        try {
-            bkDataFrame.createTempView("burger_king");
-        } catch (AnalysisException e) {
-            e.printStackTrace();
-        }
-        Dataset<Row> results = sparkSession.sql("select * from burger_king");
-        results.show();
-    }
-
-    private void createAndShowDatasetUsingDomainObject() {
+    private void createAndShowDataset() {
         SparkSession sparkSession = getSparkSession();
         JavaRDD<String> stringRDD = sparkSession.sparkContext().textFile(getDataFile(), 1).toJavaRDD();
         JavaRDD<Franchise> franchiseRDD = stringRDD.map(data -> {
