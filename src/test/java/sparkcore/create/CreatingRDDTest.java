@@ -1,4 +1,4 @@
-package sparkrdd.create;
+package sparkcore.create;
 
 import org.apache.spark.api.java.JavaRDD;
 import org.junit.Assert;
@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
-import sparkrdd.create.CreatingRDD;
 
 import java.util.Arrays;
 import java.util.List;

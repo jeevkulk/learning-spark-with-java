@@ -1,7 +1,6 @@
-package sparkrdd.transformation;
+package sparkcore.transformation;
 
-import domain.Course;
-import org.apache.commons.lang3.time.StopWatch;
+import common.domain.Course;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.spark.api.java.JavaRDD;
@@ -13,14 +12,13 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @RunWith(MockitoJUnitRunner.class)
-public class NarrowTransformationsTest {
+public class WideTransformationsTest {
 
-    private Logger logger = LogManager.getLogger(NarrowTransformationsTest.class);
+    private Logger logger = LogManager.getLogger(WideTransformationsTest.class);
 
-    NarrowTransformations narrowTransformations = NarrowTransformations.INSTANCE;
+    WideTransformations wideTransformations = WideTransformations.INSTANCE;
     private List<Course> courses1 = null;
     private List<Course> courses2 = null;
 
@@ -63,6 +61,7 @@ public class NarrowTransformationsTest {
                 new Course ("CE720", "Non-destructive Testing of Materials",true,0,"CE4",6),
                 new Course ("CE727", "Construction Materials",true,0,"CE4",6),
                 new Course ("CE743", "Condition Assessment and Rehabilitation of Structures",true,0,"CE4",6),
+                new Course ("CE771", "Optimization in Civil Engineering",true,0,"CE4",6),
                 new Course ("CE771", "Optimization in Civil Engineering",true,0,"CE4",6)
         );
         courses2 = Arrays.asList(
@@ -74,56 +73,14 @@ public class NarrowTransformationsTest {
     }
 
     @Test
-    public void testFilterOutElectiveCourses() {
-        JavaRDD<Course> rdd = narrowTransformations.filterOutElectiveCourses(courses1);
-        Assert.assertTrue(rdd.count() == 8L);
-    }
-
-    @Test
-    public void testGetAllCourseNamesUsingMap() {
-        StopWatch sw = new StopWatch();
-        sw.start();
-        JavaRDD<String> rdd = narrowTransformations.getAllCourseNamesUsingMap(courses1);
-        sw.stop();
-        logger.info("Time to get course names: "+sw.getTime(TimeUnit.MILLISECONDS));
-        Assert.assertTrue(rdd.first() instanceof String);
-    }
-
-    @Test
-    public void testGetAllCourseCodesUsingFlatMap() {
-        JavaRDD<String> rdd = narrowTransformations.getAllCourseCodesUsingFlatMap(courses1);
-        Assert.assertTrue(rdd.count() == 111L);
-    }
-
-    @Test
-    public void testGetAllCourseNamesUsingMapPartition() {
-        StopWatch sw = new StopWatch();
-        sw.start();
-        JavaRDD<String> rdd = narrowTransformations.getAllCourseNamesUsingMapPartition(courses1);
-        sw.stop();
-        logger.info("Time to get course names: "+sw.getTime(TimeUnit.MILLISECONDS));
-        Assert.assertTrue(rdd.first() instanceof String);
-    }
-
-    @Test
-    public void testGetAllCourseNamesUsingMapPartitionsWithIndex() {
-        StopWatch sw = new StopWatch();
-        sw.start();
-        JavaRDD<String> rdd = narrowTransformations.getAllCourseNamesUsingMapPartitionsWithIndex(courses1);
-        sw.stop();
-        logger.info("Time to get course names: "+sw.getTime(TimeUnit.MILLISECONDS));
-        Assert.assertTrue(rdd.first() instanceof String);
-    }
-
-    @Test
-    public void testGetSampleRDD() {
-        JavaRDD<Course> rdd = narrowTransformations.getSampleRDD(courses1, false,0.1);
-        Assert.assertTrue(rdd.count() == 4);
-    }
-
-    @Test
     public void testGetUnionRDD() {
-        JavaRDD<Course> rdd = narrowTransformations.getUnionRDD(courses1, courses2);
-        Assert.assertTrue(rdd.count() == 41);
+        JavaRDD<Course> rdd = wideTransformations.getIntersectionRDD(courses1, courses2);
+        Assert.assertTrue(rdd.count() == 3);
+    }
+
+    @Test
+    public void testGetDistinct() {
+        JavaRDD<Course> rdd = wideTransformations.getDistinct(courses1);
+        Assert.assertTrue(rdd.count() == 37);
     }
 }
