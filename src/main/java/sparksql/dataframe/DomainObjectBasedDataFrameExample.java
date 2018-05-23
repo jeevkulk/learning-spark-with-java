@@ -3,49 +3,30 @@ package sparksql.dataframe;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.*;
-import org.apache.spark.sql.types.DataTypes;
-import org.apache.spark.sql.types.StructField;
-import org.apache.spark.sql.types.StructType;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
-public class BasicDataFrameExample {
+public class DomainObjectBasedDataFrameExample {
 
     public static void main(String[] args) {
-        BasicDataFrameExample example = new BasicDataFrameExample();
+        DomainObjectBasedDataFrameExample example = new DomainObjectBasedDataFrameExample();
         example.createAndShowDataFrame();
     }
 
     private void createAndShowDataFrame() {
         SparkSession sparkSession = getSparkSession();
         JavaRDD<String> stringRDD = sparkSession.sparkContext().textFile(getDataFile(), 1).toJavaRDD();
-        JavaRDD<Row> rowRDD = stringRDD.map(data -> {
+        JavaRDD<Franchise> franchiseRDD = stringRDD.map(data -> {
             String[] dataArr = data.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
-            return RowFactory.create(Double.parseDouble(dataArr[0]), Double.parseDouble(dataArr[1]), dataArr[2], dataArr[3]);
+            return new Franchise(Double.parseDouble(dataArr[0]), Double.parseDouble(dataArr[1]), dataArr[2], dataArr[3]);
         });
-
-        /** Further JavaRDD<Row> transformation can be done as below:
-         *
-        JavaRDD<Franchise> franchiseRDD = rowRDD.map(row -> {
-            return new Franchise(row.getDouble(0), row.getDouble(1), row.getString(2), row.getString(3));
-        });
-        */
-        List<StructField> fields = new ArrayList<>();
-        fields.add(DataTypes.createStructField("latitude", DataTypes.DoubleType, false));
-        fields.add(DataTypes.createStructField("longitude", DataTypes.DoubleType, false));
-        fields.add(DataTypes.createStructField("name", DataTypes.StringType, false));
-        fields.add(DataTypes.createStructField("address", DataTypes.StringType, false));
-        StructType schema = DataTypes.createStructType(fields);
-
-        Dataset<Row> bkDataFrame = sparkSession.createDataFrame(rowRDD, schema);
+        Dataset<Row> bkDataFrame = sparkSession.createDataFrame(franchiseRDD, Franchise.class);
         try {
-            bkDataFrame.createTempView("burger_king");
+            bkDataFrame.createTempView("burger_king1");
         } catch (AnalysisException e) {
             e.printStackTrace();
         }
-        Dataset<Row> results = sparkSession.sql("select * from burger_king");
+        Dataset<Row> results = sparkSession.sql("select * from burger_king1");
         results.show();
     }
 
@@ -61,7 +42,7 @@ public class BasicDataFrameExample {
         return this.getClass().getClassLoader().getResource("burgerking.csv").getFile();
     }
 
-    /*public static class Franchise implements Serializable {
+    public static class Franchise implements Serializable {
         private double latitude;
         private double longitude;
         private String name;
@@ -108,6 +89,6 @@ public class BasicDataFrameExample {
         public void setAddress(String address) {
             this.address = address;
         }
-    }*/
+    }
 }
 
