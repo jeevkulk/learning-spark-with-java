@@ -7,16 +7,16 @@ public class BasicDataFrameOperations {
 
     public static void main(String[] args) {
         BasicDataFrameOperations example = new BasicDataFrameOperations();
-        example.createAndShowDatasetUsingRow();
+        example.createAndShowDataFrameUsingRow();
     }
 
-    private void createAndShowDatasetUsingRow() {
+    private void createAndShowDataFrameUsingRow() {
         SparkSession sparkSession = getSparkSession();
         Dataset<Row> dataset = sparkSession.read().json(getDataFile());
         dataset.show();
     }
 
-    private SparkSession getSparkSession() {
+     private SparkSession getSparkSession() {
         SparkSession sparkSession = SparkSession.builder()
                 .appName("DataFrame Example")
                 .config(new SparkConf().setMaster("local").setAppName("DataFrame Example"))
