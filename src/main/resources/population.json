@@ -1,4 +1,4 @@
-[{"year":1850,"age":0,"sex":1,"people":1483789},
+{"year":1850,"age":0,"sex":1,"people":1483789},
   {"year":1850,"age":0,"sex":2,"people":1450376},
   {"year":1850,"age":5,"sex":1,"people":1411067},
   {"year":1850,"age":5,"sex":2,"people":1359668},
@@ -567,4 +567,4 @@
   {"year":2000,"age":85,"sex":1,"people":970357},
   {"year":2000,"age":85,"sex":2,"people":1981156},
   {"year":2000,"age":90,"sex":1,"people":336303},
-  {"year":2000,"age":90,"sex":2,"people":1064581}]
+  {"year":2000,"age":90,"sex":2,"people":1064581}
