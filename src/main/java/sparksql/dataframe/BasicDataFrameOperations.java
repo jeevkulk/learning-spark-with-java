@@ -14,9 +14,15 @@ public class BasicDataFrameOperations {
         SparkSession sparkSession = getSparkSession();
         Dataset<Row> dataset = sparkSession.read().json(getDataFile());
         dataset.show();
+
+        calculateYearlyPopulationGroupedBySex(dataset);
     }
 
-     private SparkSession getSparkSession() {
+    private String getDataFile() {
+        return this.getClass().getClassLoader().getResource("population.json").getFile();
+    }
+
+    private SparkSession getSparkSession() {
         SparkSession sparkSession = SparkSession.builder()
                 .appName("DataFrame Example")
                 .config(new SparkConf().setMaster("local").setAppName("DataFrame Example"))
@@ -24,8 +30,8 @@ public class BasicDataFrameOperations {
         return sparkSession;
     }
 
-    private String getDataFile() {
-        return this.getClass().getClassLoader().getResource("population.json").getFile();
+    private void calculateYearlyPopulationGroupedBySex(Dataset<Row> dataset) {
+        dataset.groupBy("year", "sex").sum("people").orderBy("year", "sex").show();
     }
 }
 
